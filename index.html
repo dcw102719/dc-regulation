@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>防火避難法規快速檢討 - DC 線上作業系統</title>
+  <style>
+    /* 沿用原版 DC 線上作業系統：深綠色導覽、淡灰背景、白色功能卡片 */
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--dark:#06231b;--green:#059669;--strong:#047857;--light:#ecfdf5;--pale:#f8fafc;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--shadow:0 2px 4px rgba(0,0,0,.02)}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#f8fafc;color:var(--text);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;line-height:1.55}
+    header{background:var(--dark);border-bottom:1px solid rgba(16,185,129,.2);position:sticky;top:0;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+    .header-container{max-width:1200px;margin:auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+    .logo-area{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;cursor:pointer}
+    .logo-box{width:40px;height:40px;background:rgba(16,185,129,.2);border:1px solid rgba(52,211,153,.5);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#34d399;font-weight:bold;font-size:16px;flex-shrink:0}
+    .logo-text h1{font-size:18px;font-weight:bold;color:#ecfdf5}
+    .logo-text p{font-size:11px;color:#34d399}
+    nav{display:flex;gap:18px;font-size:14px;font-weight:500;align-items:center}
+    nav button{border:0;background:none;font:inherit;color:#cbd5e1;cursor:pointer;transition:color .2s;white-space:nowrap}
+    nav button:hover,nav button.active{color:#34d399}
+    .mobile-menu-toggle{display:none;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid rgba(52,211,153,.4);border-radius:8px;background:rgba(16,185,129,.15);color:#ecfdf5;cursor:pointer;font-size:24px}
+    main{max-width:1200px;margin:0 auto;padding:42px 24px 70px;width:100%;flex-grow:1}
+    .page-header{margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+    .page-header h2{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:6px}
+    .page-header p{font-size:14px;color:var(--muted)}
+    .btn-primary,.btn-secondary,.btn-quiet{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;font-family:inherit;min-height:42px}
+    .btn-primary{background:var(--green);color:#fff;border:1px solid var(--green)}
+    .btn-primary:hover{background:var(--strong)}
+    .btn-secondary{background:#fff;color:#0f766e;border:1px solid #a7f3d0}
+    .btn-secondary:hover{background:var(--light)}
+    .btn-quiet{background:#fff;color:var(--muted);border:1px solid var(--border)}
+    .btn-quiet:hover{border-color:#94a3b8;color:var(--text)}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:28px}
+    .tool-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;color:inherit;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow);transition:all .2s ease;text-align:left;cursor:pointer;min-height:178px;font:inherit}
+    .tool-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 8px 16px rgba(5,150,105,.08)}
+    .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+    .card-icon{font-size:25px}
+    .external-tag{font-size:11px;background:var(--light);color:var(--green);border:1px solid #a7f3d0;padding:2px 8px;border-radius:4px;font-weight:600}
+    .external-tag.pending{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+    .tool-card h3{font-size:16px;font-weight:700;color:#0f172a;margin-bottom:6px}
+    .tool-card p{font-size:13px;color:var(--muted);line-height:1.6}
+    .card-footer{margin-top:16px;font-size:12px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:4px}
+    .workspace-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;box-shadow:var(--shadow);margin-bottom:22px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .section-head h3{font-size:19px;color:#0f172a}
+    .section-head p{font-size:13px;color:var(--muted);margin-top:4px}
+    label{display:block;font-weight:600;font-size:13px;color:#334155;margin-bottom:7px}
+    input,select,textarea{font:inherit;color:#0f172a;background:white;border:1px solid #cbd5e1;border-radius:8px;padding:10px 12px;width:100%;min-height:43px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(5,150,105,.12)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .button-row{display:flex;flex-wrap:wrap;gap:10px}
+    .notice{border-left:3px solid #94a3b8;background:#f8fafc;padding:12px 14px;border-radius:5px;font-size:13px;color:#475569}
+    .notice.warning{background:#fffbeb;border-left-color:#d97706;color:#92400e}
+    .notice.success{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+    .notice.error{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+    .muted{font-size:13px;color:var(--muted)}
+    .section{display:none}
+    .section.show{display:block}
+    .view-back{margin-bottom:17px}
+    .block-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:14px}
+    .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .pill{display:inline-flex;align-items:center;background:var(--light);color:#047857;border:1px solid #a7f3d0;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+    .output{display:none;margin-top:22px;border-top:1px solid var(--border);padding-top:20px}
+    .output.show{display:block}
+    .metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+    .metric-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric{border:1px solid var(--border);border-radius:10px;padding:16px;background:#f8fafc}
+    .metric span{display:block;color:#64748b;font-size:12px;margin-bottom:6px}
+    .metric strong{font-size:24px;color:#0f172a;font-variant-numeric:tabular-nums}
+    .calc-formula{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:12px 14px;color:#475569;font-size:13px;margin-top:12px}
+    .source-link{font-size:13px;color:#047857;text-underline-offset:3px;word-break:break-word}
+    .source-list{display:grid;gap:12px}
+    .source-row{border:1px solid var(--border);padding:14px 16px;border-radius:8px}
+    .source-row strong{display:block;font-size:14px;margin-bottom:6px}
+    .history-item p{font-size:13px;color:#64748b}
+    .tiny{font-size:11px;color:#94a3b8}
+    .empty{padding:25px;border:1px dashed #cbd5e1;border-radius:8px;color:#64748b;text-align:center;font-size:13px}
+    .rule-points{font-size:13px;display:grid;gap:8px;margin:8px 0 14px;color:#334155}
+    .rule-points div{padding-left:16px;position:relative}
+    .rule-points div:before{content:"•";position:absolute;left:2px;color:var(--green)}
+    .field-note{font-size:12px;color:#64748b;margin-top:6px}
+
+    /* 門窗有效開口面積試算：延續既有白卡、深綠介面 */
+    .opening-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin-top:16px}
+    .opening-table{width:100%;border-collapse:collapse;min-width:670px}
+    .opening-table th{padding:12px 11px;background:#f1f5f9;color:#334155;text-align:left;font-size:12px;font-weight:700;border-bottom:1px solid var(--border);white-space:nowrap}
+    .opening-table td{padding:11px;border-bottom:1px solid #edf2f7;vertical-align:middle;font-size:14px}
+    .opening-table tbody tr:last-child td{border-bottom:none}
+    .opening-table .door-name{font-weight:700;white-space:nowrap;color:#334155}
+    .opening-table input{min-width:110px;min-height:40px;font-size:14px}
+    .opening-table input.auto-height{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+    .door-unit{font-size:11px;color:#64748b;display:block;margin-top:4px;white-space:nowrap}
+    .door-auto{font-size:11px;color:#059669;display:block;margin-top:4px}
+    .door-area{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+    .remove-door{background:#fff;border:1px solid #fecaca;color:#b91c1c;border-radius:7px;padding:7px 10px;cursor:pointer;font-size:12px}
+    .remove-door:disabled{opacity:.35;cursor:not-allowed}
+    .opening-result{margin-top:20px;border-top:1px solid var(--border);padding-top:19px}
+    .opening-result h4{font-size:16px;color:#0f172a;margin-bottom:12px}
+    .opening-state{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px}
+    .opening-state strong{font-size:19px}
+    .opening-state .ok{color:#15803d}.opening-state .bad{color:#b91c1c}.opening-state .wait{color:#64748b}
+    @media(max-width:640px){.opening-table-wrap{margin-top:12px}.opening-table td{padding:8px}.opening-table th{padding:10px 8px}}
+
+    /* 排煙檢討：沿用 DC 白卡片與綠色系；依輸入動態顯示必要條件 */
+    .step-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#ecfdf5;color:#047857;font-size:14px;margin-right:7px}
+    .smoke-conditional[hidden],.smoke-subgroup[hidden]{display:none!important}
+    .smoke-subgroup{padding:18px;border:1px solid #e2e8f0;border-radius:10px;background:#fbfdff;margin-top:20px}
+    .smoke-subgroup .block-title{margin:0 0 16px}
+    .smoke-final .smoke-result-title{display:block;font-size:20px;margin-bottom:8px}
+    .smoke-paths{display:grid;gap:8px}
+    .smoke-path{padding:11px 14px;border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;gap:12px;background:#fff}
+    .smoke-path>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+    .smoke-path strong{font-size:13px}.smoke-dot{font-size:14px;width:17px;flex:none}.smoke-dot.yes{color:#dc2626}.smoke-dot.no{color:#16a34a}.smoke-dot.unknown{color:#d97706}
+    .smoke-pill{white-space:nowrap;font-size:11px;border-radius:12px;padding:3px 8px;background:#f1f5f9;color:#64748b}
+    .smoke-pill.yes{background:#fee2e2;color:#991b1b}.smoke-pill.no{background:#dcfce7;color:#166534}.smoke-pill.unknown{background:#fef3c7;color:#92400e}
+    @media(max-width:640px){.smoke-subgroup{padding:13px}.smoke-path{padding:10px;gap:7px}.smoke-pill{font-size:10px}}
+
+    /* 逐步詢問與輸入值連動：只顯示與當前條件相關的欄位 */
+    #view-smoke [hidden]{display:none!important}
+    .quick-metadata{display:flex;align-items:center}
+    .quick-summary{width:100%;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:12px 14px;color:#166534;font-size:13px}
+    .quick-details{border:1px solid #dbe5ed;border-radius:10px;padding:13px 16px;margin-top:18px;background:#fbfdff}
+    .quick-details summary{cursor:pointer;color:#334155;font-weight:600;font-size:13px}
+    .quick-details[open] summary{color:#047857}
+    .auto-label{font-size:11px;font-weight:400;color:#059669}
+    .small-check{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:400;margin:8px 0 0;cursor:pointer}
+    .small-check input{width:16px;height:16px;min-height:16px;flex-shrink:0}
+    #smokeResultCard{border-color:#a7f3d0}
+    #smokeResultCard .section-head{margin-bottom:14px}
+    .smoke-conditional:not([hidden]){display:block}
+    footer{background:#fff;border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:#64748b;margin-top:48px}
+    @media(max-width:980px){.header-container{flex-direction:column;align-items:stretch;gap:12px}nav{overflow-x:auto;flex-wrap:nowrap;padding-bottom:8px}}
+    @media(max-width:640px){.header-container{flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px 16px;gap:0}.logo-area{flex:1;min-width:0;margin-right:8px;gap:10px}.logo-box{width:36px;height:36px}.logo-text h1{font-size:16px}.logo-text p{font-size:9px;white-space:nowrap}.mobile-menu-toggle{display:flex}.mobile-menu-toggle::before{content:"☰"}.mobile-menu-toggle[aria-expanded="true"]::before{content:"✕";font-size:20px}nav{display:none;flex-direction:column;flex-basis:100%;width:100%;margin:12px 0 0;padding:8px 0 4px;gap:2px;overflow-x:hidden;max-height:calc(100dvh - 88px);border-top:1px solid rgba(52,211,153,.2)}nav.is-open{display:flex}nav button{display:block;text-align:left;width:100%;padding:11px 12px;border-radius:6px;font-size:14px}nav button.active{background:rgba(16,185,129,.12)}main{padding:24px 16px 36px}.page-header{align-items:flex-start;flex-direction:column;gap:14px}.page-header h2{font-size:24px}.tools-grid{grid-template-columns:1fr;gap:12px}.tool-card{padding:16px;min-height:142px}.workspace-card{padding:17px}.grid-2,.grid-3,.metric-grid,.metric-grid.two{grid-template-columns:1fr}.metric strong{font-size:22px}footer{padding:20px 16px;line-height:1.7}}
+
+/* 排煙設備：極簡五欄判定。其餘頁面維持原樣。 */
+.smoke-scope{margin-bottom:20px;line-height:1.75}
+.smoke-auto-kind{height:44px;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#f1f5f9;color:#0f766e;font-weight:700}
+.simple-smoke-output .empty{text-align:center;color:#64748b;padding:25px 10px}
+.simple-smoke-verdict{border:1px solid;border-radius:12px;padding:23px 25px}
+.simple-smoke-success{background:#ecfdf5;border-color:#6ee7b7;color:#065f46}
+.simple-smoke-danger{background:#fff7ed;border-color:#fdba74;color:#9a3412}
+.simple-smoke-kicker{font-size:13px;font-weight:600;margin-bottom:7px}
+.simple-smoke-title{font-size:27px;font-weight:800;line-height:1.35}
+.simple-smoke-verdict p{font-size:14px;line-height:1.75;margin:10px 0 0}
+.simple-smoke-detail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:15px 0 8px}
+.simple-smoke-detail span{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:12px;font-size:13px;overflow-wrap:anywhere}
+.simple-smoke-detail b{display:block;color:#64748b;font-size:11px;margin-bottom:6px}
+.simple-smoke-alert{border-left:3px solid #f59e0b;background:#fffbeb;color:#92400e;border-radius:5px;padding:11px 14px;font-size:13px;margin:10px 0;line-height:1.7}
+.smoke-legal-footnote{border-top:1px solid #e2e8f0;margin-top:18px;padding-top:15px;color:#64748b;font-size:12px;line-height:1.8}
+.smoke-legal-footnote a{color:#047857}
+@media(max-width:780px){.simple-smoke-detail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.simple-smoke-detail{grid-template-columns:1fr}.simple-smoke-title{font-size:23px}.simple-smoke-verdict{padding:17px}}
+
+    /* 防火區劃新模組：延續原有色系、維持其餘模組原樣 */
+    .compartment-output{margin-top:22px;min-height:60px}
+    .comp-result{border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;padding:20px;margin-top:12px}
+    .comp-result.strong{border-color:#93c5fd;background:#eff6ff}
+    .comp-result.check{border-color:#fcd34d;background:#fffbeb}
+    .comp-result.safe{border-color:#86efac;background:#f0fdf4}
+    .comp-kicker{font-size:12px;font-weight:700;letter-spacing:.04em;color:#64748b;margin-bottom:6px}
+    .comp-title{font-size:21px;font-weight:800;color:#0f172a;margin-bottom:6px}
+    .comp-result p{font-size:14px;line-height:1.75;color:#334155}
+    .comp-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+    .comp-fact{border:1px solid #e2e8f0;background:white;border-radius:9px;padding:12px}
+    .comp-fact small{font-size:11px;color:#64748b;display:block}
+    .comp-fact strong{font-size:17px;color:#0f172a;display:block;margin-top:4px;overflow-wrap:anywhere}
+    .comp-detail{font-size:13px;line-height:1.75;color:#475569;margin:8px 0}
+    .comp-detail strong{color:#0f172a}
+    .comp-links{font-size:12px;margin-top:12px;line-height:1.9}
+    .comp-links a{color:#047857;text-decoration:underline;text-underline-offset:3px;margin-right:10px}
+    @media(max-width:640px){.comp-facts{grid-template-columns:1fr}.comp-result{padding:16px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="#home" class="logo-area" id="logoHome" aria-label="返回查詢首頁">
+        <div class="logo-box">DC</div>
+        <div class="logo-text"><h1>DC 線上作業系統</h1><p>Fire Safety &amp; Performance Engineering</p></div>
+      </a>
+      <button type="button" class="mobile-menu-toggle" id="menuBtn" aria-label="開啟導覽選單" aria-controls="siteNav" aria-expanded="false"></button>
+      <nav id="siteNav" aria-label="主要導覽">
+        <button data-view="home" class="active">檢討首頁</button>
+        <button data-view="windows">2% 面積檢討</button>
+        <button data-view="smoke">排煙設備</button>
+        <button data-view="compartment">防火區劃</button>
+        <button data-view="finish">耐燃等級</button>
+        <button data-view="sources">法規來源</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-home" class="section show">
+      <div class="page-header">
+        <div><h2>建築防火避難法規快速檢討</h2><p>選擇查詢項目，直接輸入條件，快速換算面積並查閱法規依據。</p></div>
+        <span class="pill">DC Engineering · 共用版型</span>
+      </div>
+      <div class="section-head"><div><h3>選擇法規檢討項目</h3><p>點選功能卡片進入獨立檢討頁面。</p></div></div>
+      <div class="tools-grid">
+        <button class="tool-card" data-view="windows"><div><div class="card-top"><span class="card-icon">🪟</span><span class="external-tag">可計算</span></div><h3>2% 有效通風開口面積</h3><p>輸入樓地板面積或有效通風開口面積，自動換算 2% 對應數值。</p></div><span class="card-footer">開始檢討 →</span></button>
+        <button class="tool-card" data-view="smoke"><div><div class="card-top"><span class="card-icon">🌬️</span><span class="external-tag">法規檢討</span></div><h3>是否需要排煙設備</h3><p>依空間用途、樓層、面積及耐燃／防火區劃條件，快速檢討需設或免設。</p></div><span class="card-footer">查看條件 →</span></button>
+        <button class="tool-card" data-view="compartment"><div><div class="card-top"><span class="card-icon">🏢</span><span class="external-tag">快速查詢</span></div><h3>防火區劃及防火時效</h3><p>檢查樓層、用途、區劃面積及不同用途空間的區隔要求。</p></div><span class="card-footer">查看條件 →</span></button>
+        <button class="tool-card" data-view="finish"><div><div class="card-top"><span class="card-icon">🛡️</span><span class="external-tag">快速查詢</span></div><h3>內部裝修耐燃等級</h3><p>依使用類組、樓層、居室及走廊部位，自動顯示基本耐燃等級。</p></div><span class="card-footer">查看條件 →</span></button>
+      </div>
+      <div class="notice">本工具用於設計初步檢討與資料整理，不取代正式法規審查。各檢討結果須依適用時點、使用類組、地方規定、函釋及核准圖說再核對。</div>
+    </section>
+
+    <section id="view-windows" class="section">
+      <div class="view-back"><button class="btn-quiet" data-view="home">← 返回檢討首頁</button></div>
+      <div class="page-header"><div><h2>2% 有效通風開口面積換算</h2><p>兩個面積欄位擇一輸入，即可自動換算另一個數值。</p></div><span class="pill">即時換算</span></div>
+      <div class="workspace-card">
+        <p class="muted" style="margin-bottom:16px">請輸入<strong>其中一個面積</strong>；系統會自動計算另一欄。若改填另一欄，則會以新輸入數值反向換算。</p>
+        <div class="grid-2">
+          <div><label for="roomArea">居室樓地板面積（㎡）</label><input id="roomArea" type="number" inputmode="decimal" step="any" min="0" placeholder="例如：120" autocomplete="off"><p class="field-note" id="roomAreaHint">輸入此欄，右側自動計算所需 2% 開口面積。</p></div>
+          <div><label for="openArea">有效通風開口面積（㎡）</label><input id="openArea" type="number" inputmode="decimal" step="any" min="0" placeholder="例如：2.4" autocomplete="off"><p class="field-note" id="openAreaHint">輸入此欄，左側自動反算可對應的樓地板面積。</p></div>
+        </div>
+        <div class="form-actions"><button id="resetWindow" class="btn-quiet">清除重新計算</button></div>
+        <div class="output" id="windowOutput" aria-live="polite">
+          <h3 style="font-size:18px">2% 面積換算結果</h3>
+          <div class="metric-grid two">
+            <div class="metric"><span>居室樓地板面積</span><strong id="roomAreaMetric">—</strong></div>
+            <div class="metric"><span>所需有效通風開口面積（2%）</span><strong id="neededMetric">—</strong></div>
+          </div>
+          <div class="notice" id="windowMessage"></div>
+          <div class="calc-formula" id="formulaText"></div>
+          <div class="button-row" style="margin-top:16px"><button id="copyResult" class="btn-secondary">複製換算結果</button></div>
+        </div>
+      </div>
+
+      <div class="workspace-card" id="doorCalcCard">
+        <div class="section-head">
+          <div><h3>門窗開口面積計算</h3><p>預設 1 樘，可依需求新增門窗。輸入淨寬後，自動反推達到 2% 所需的最低淨高；亦可改填實際高度進行比對。</p></div>
+          <button type="button" class="btn-secondary" id="addDoor">＋ 新增門窗</button>
+        </div>
+        <div class="notice">寬、高單位為 <strong>cm</strong>；每樘有效開口面積＝寬 × 高 ÷ 10,000（㎡）。多樘門窗會加總；多個自動高度會共同分配尚需的開口面積。</div>
+        <div class="opening-table-wrap">
+          <table class="opening-table" aria-label="各樘門窗有效開口面積計算">
+            <thead><tr><th>門窗</th><th>有效開口淨寬（cm）</th><th>有效開口淨高（cm）</th><th>開口面積（㎡）</th><th>操作</th></tr></thead>
+            <tbody id="doorRows"></tbody>
+          </table>
+        </div>
+        <div class="opening-result" aria-live="polite">
+          <h4>開口面積檢討結果</h4>
+          <div class="metric-grid two">
+            <div class="metric"><span>門窗有效開口總面積</span><strong id="doorTotalArea">—</strong></div>
+            <div class="metric"><span>2% 所需開口面積</span><strong id="doorRequiredArea">—</strong></div>
+          </div>
+          <div class="opening-state" id="doorStatus"><strong class="wait">尚待輸入</strong></div>
+          <p class="field-note" id="doorRatio">請先輸入上方任一面積，再填寫門窗有效開口寬度。</p>
+        </div>
+        <p class="field-note" style="margin-top:16px"><strong>判定範圍：</strong>「符合／不符合」僅表示已填或自動推算的有效開口面積是否達 2% 比例。自動高度是設計參考值，不代表實際門窗已達標；實務仍需核對可通風的有效面積、開啟方式、開口位置及適用法規條件。</p>
+      </div>
+      <div class="workspace-card">
+        <div class="section-head"><div><h3>檢討提醒</h3></div></div>
+        <div class="rule-points">
+          <div>此處為單純 2% 面積換算。由其中一個面積反算另一個面積，<strong>並非</strong>輸入「實際面積」後判定已符合法規。</div>
+          <div>下方門窗計算所顯示的「符合／不符合」僅為 2% 面積比例判定，須另核對有效開口位置、構造及法定適用條件。</div>
+          <div>「無窗戶居室」與「排煙設備」的適用條件並不相同，不可只依本頁 2% 計算結果認定免設或合格。</div>
+        </div>
+        <a class="source-link" href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0070115" target="_blank" rel="noopener noreferrer">法規原文：建築技術規則建築設計施工編 ↗</a>
+      </div>
+    </section>
+
+
+<section id="view-smoke" class="section">
+  <div class="view-back"><button class="btn-quiet" data-view="home">← 返回檢討首頁</button></div>
+  <div class="page-header">
+    <div><h2>排煙設備適用性檢討</h2><p>輸入空間名稱、面積與所在樓層，系統自動識別居室／非居室，依第28條及第190條進行簡化檢討。</p></div>
+    <span class="pill">簡化快速判定</span>
+  </div>
+  <div class="notice smoke-scope">
+    <strong>檢討前提：</strong>以有效通風未達 2% 的空間為前提，且預設所在樓層為無開口樓層；不另詢問板下80公分、開口面積或其他特殊情形。
+    本頁只針對指定空間初步判定，<strong>未另外檢核同用途場所總面積、整層總面積及其他免設途徑</strong>。
+  </div>
+  <div class="workspace-card">
+    <div class="section-head">
+      <div><h3>輸入檢討條件</h3><p>僅需基本資料；下方結果會隨輸入自動更新。</p></div>
+      <a class="source-link" href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=D0120029&amp;flno=190" target="_blank" rel="noopener noreferrer">第190條原文 ↗</a>
+    </div>
+    <div class="grid-2">
+      <div>
+        <label for="simpleSmokeUse">空間名稱／居室用途</label>
+        <select id="simpleSmokeUse">
+          <option value="">請選擇空間名稱</option>
+          <optgroup label="居室｜辦公及商業">
+            <option value="一般事務所">一般事務所</option>
+            <option value="辦公室">辦公室</option>
+            <option value="會議室">會議室</option>
+            <option value="管委會辦公室">管委會辦公室</option>
+            <option value="一般零售業／店舖">一般零售業／店舖</option>
+            <option value="商場">商場</option>
+            <option value="餐廳用餐區">餐廳用餐區</option>
+            <option value="廚房">廚房</option>
+          </optgroup>
+          <optgroup label="居室｜醫療、住宅及公共使用">
+            <option value="診療室">診療室</option>
+            <option value="醫院病房">醫院病房</option>
+            <option value="托嬰中心活動室">托嬰中心活動室</option>
+            <option value="住宅客廳">住宅客廳</option>
+            <option value="住宅臥室">住宅臥室</option>
+            <option value="集合住宅">集合住宅（確認屬第190條第7款）</option>
+            <option value="旅館客房">旅館客房</option>
+            <option value="學校教室">學校教室（確認屬第190條第7款）</option>
+            <option value="體育館">體育館（確認屬第190條第7款）</option>
+            <option value="運動中心活動空間">運動中心活動空間</option>
+          </optgroup>
+          <optgroup label="非居室｜交通、附屬及設備空間">
+            <option value="門廳">門廳</option>
+            <option value="梯廳">梯廳</option>
+            <option value="走廊">走廊</option>
+            <option value="樓梯間">樓梯間</option>
+            <option value="昇降機昇降路">昇降機昇降路</option>
+            <option value="管道間">管道間</option>
+            <option value="儲藏室">儲藏室</option>
+            <option value="廁所">廁所</option>
+            <option value="洗手間">洗手間</option>
+            <option value="浴室">浴室</option>
+            <option value="機械室">機械室</option>
+            <option value="電氣機房">電氣機房</option>
+            <option value="停車空間">停車空間</option>
+          </optgroup>
+        </select>
+        <p class="field-note" id="simpleSmokeTypeHint">依選擇的空間自動帶入居室／非居室。</p>
+      </div>
+      <div>
+        <label for="simpleSmokeFloor">所在樓層</label>
+        <select id="simpleSmokeFloor"><option value="">請選擇樓層</option></select>
+      </div>
+      <div>
+        <label for="simpleSmokeArea">空間樓地板面積（㎡）</label>
+        <input id="simpleSmokeArea" type="number" min="0" step="any" inputmode="decimal" placeholder="例如：80" autocomplete="off">
+        <p class="field-note">以目前檢討的單一居室或區劃空間面積計算。</p>
+      </div>
+      <div>
+        <label>自動認定空間性質</label>
+        <div class="smoke-auto-kind" id="simpleSmokeKind">請先選擇空間名稱</div>
+        <p class="field-note">依一般定義預設，仍應以空間實際使用方式為準。</p>
+      </div>
+      <div>
+        <label for="simpleSmokeFinish">天花板及室內牆面是否均耐燃一級</label>
+        <select id="simpleSmokeFinish"><option value="">請選擇</option><option value="yes">是</option><option value="no">否</option></select>
+      </div>
+      <div>
+        <label for="simpleSmokeCompartment">是否具完整1小時防火區劃（含門窗及樓板）</label>
+        <select id="simpleSmokeCompartment"><option value="">請選擇</option><option value="yes">是</option><option value="no">否</option></select>
+        <p class="field-note"><strong>選「是」時：</strong>須已確認牆、門窗、防火構造樓地板均符合1小時要求，且防火門窗具<strong>1小時以上阻熱性</strong>。</p>
+      </div>
+    </div>
+    <div class="form-actions"><button type="button" class="btn-quiet" id="simpleSmokeReset">清除重新檢討</button></div>
+  </div>
+  <div class="workspace-card" id="simpleSmokeResultCard">
+    <div class="section-head"><div><h3>排煙檢討結果</h3><p>輸入完成即時顯示設置或免設初步判定。</p></div></div>
+    <div id="simpleSmokeOutput" aria-live="polite" class="simple-smoke-output"><div class="empty">請先選擇空間名稱、樓層、面積及相關構造條件。</div></div>
+    <div class="smoke-legal-footnote">本結果僅為指定輸入條件下的簡化檢討，不代替第28條全部設置要件、第190條全部免設途徑及正式消防圖說審查。<a href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=D0120029&amp;flno=28" target="_blank" rel="noopener noreferrer">第28條</a>／<a href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=D0120029&amp;flno=190" target="_blank" rel="noopener noreferrer">第190條</a>。</div>
+  </div>
+</section>
+    <section id="view-compartment" class="section">
+      <div class="view-back"><button class="btn-quiet" data-view="home">← 返回檢討首頁</button></div>
+      <div class="page-header"><div><h2>防火區劃設置檢討</h2><p>依空間用途、樓層、面積與自動撒水設備，初步查詢是否需防火區劃、牆壁及防火門窗時效。</p></div><span class="pill">用途與面積連動</span></div>
+      <div class="workspace-card">
+        <div class="grid-2">
+          <div><label for="compUse">空間用途</label>
+            <select id="compUse"><option value="">請選擇空間用途</option>
+              <optgroup label="特殊防火區劃用途">
+                <option value="防災中心">防災中心（高層建築物）</option>
+                <option value="B-3餐飲業廚房">餐飲業 B-3 組廚房</option>
+                <option value="安全梯">安全梯／特別安全梯</option>
+                <option value="昇降機道">昇降機道</option>
+                <option value="管道間">管道間／維修門</option>
+                <option value="高層昇降機梯廳">高層建築物昇降機間／梯廳</option>
+                <option value="高層特安梯走廊">高層建築物連接特別安全梯之走廊</option>
+                <option value="集合住宅分戶牆">集合住宅／連棟住宅分戶牆</option>
+              </optgroup>
+              <optgroup label="一般使用空間">
+                <option value="一般事務所">一般事務所／辦公室</option>
+                <option value="會議室">會議室</option>
+                <option value="一般零售業">一般零售業／店舖</option>
+                <option value="餐飲業">餐飲業（非 B-3 廚房）</option>
+                <option value="托嬰中心">托嬰中心</option>
+                <option value="住宅">一般住宅</option>
+                <option value="集合住宅">集合住宅居室</option>
+                <option value="停車空間">停車空間</option>
+                <option value="電信機房">電信機房</option>
+                <option value="電氣機房">電氣機房／台電配電室</option>
+                <option value="消防機房">消防機房／泵浦室</option>
+                <option value="發電機房">發電機房</option>
+                <option value="儲藏室">儲藏室</option>
+                <option value="一般走廊">一般走廊／梯廳</option>
+                <option value="其他">其他用途</option>
+              </optgroup>
+            </select>
+          </div>
+          <div><label for="compFloor">所在樓層</label>
+            <select id="compFloor"><option value="">請選擇所在樓層</option>
+              <option value="basement">地下層</option><option value="low">地上1～10層</option><option value="high">地上11層以上</option>
+            </select>
+          </div>
+          <div><label for="compArea">空間／擬定區劃面積（㎡）</label>
+            <input id="compArea" type="number" min="0" step="any" inputmode="decimal" placeholder="例如：180" />
+            <p class="field-note">請填寫想要檢討的連續使用空間或擬設防火區劃範圍；非全棟總樓地板面積。</p>
+          </div>
+          <div><label for="compSprinkler">本空間是否設置有效自動撒水設備？</label>
+            <select id="compSprinkler"><option value="">請選擇</option><option value="yes">有，且有效防護範圍涵蓋本空間</option><option value="no">無／不在有效防護範圍</option></select>
+            <p class="field-note">依第79、83條可就有效防護範圍，免計算面積的二分之一。</p>
+          </div>
+        </div>
+        <div id="compFinishWrap" style="display:none;margin-top:18px">
+          <label for="compFinish">11層以上裝修條件（有需要放寬100㎡上限才填）</label>
+          <select id="compFinish">
+            <option value="base">尚未確認／依一般100㎡上限</option>
+            <option value="surface">自地板面起1.2m以上牆面及天花板均耐燃一級（200㎡級）</option>
+            <option value="substrate">室內牆面、天花板及底材均耐燃一級（500㎡級）</option>
+          </select>
+        </div>
+        <div id="compartmentOutput" class="compartment-output" aria-live="polite"><div class="empty">請選擇用途、樓層，輸入面積及撒水設備條件。</div></div>
+        <div class="form-actions"><button class="btn-secondary" id="compCopy" type="button" disabled>複製檢討結果</button><button class="btn-quiet" id="compReset" type="button">清除重填</button></div>
+        <div class="notice" style="margin-top:18px">本頁以防火構造建築物的一般區劃規定為基礎，優先檢查明確的特殊用途規定。單一空間面積無法取代全棟總樓地板面積、實際樓層配置及性能設計免適用判斷；條件不足時會顯示「尚需確認」，不直接認定免區劃。</div>
+      </div>
+    </section>
+    <section id="view-finish" class="section">
+      <div class="view-back"><button class="btn-quiet" data-view="home">← 返回檢討首頁</button></div>
+      <div class="page-header"><div><h2>內部裝修耐燃等級檢討</h2><p>選擇使用類組及樓層，自動帶出內部裝修基本耐燃等級與應加強檢核事項。</p></div><span class="pill">第88條快速檢討</span></div>
+      <div class="workspace-card">
+        <div class="grid-2">
+          <div><label for="finishUse">使用類組或用途</label><select id="finishUse"><option value="">請選擇使用類組或用途</option><optgroup label="A類｜公共集會類"><option value="A-1">A-1｜集會、表演等</option><option value="A-2">A-2｜旅客候車等</option></optgroup><optgroup label="B類｜商業類"><option value="B-1">B-1｜娛樂消費</option><option value="B-2">B-2｜百貨商場／展售</option><option value="B-3">B-3｜餐飲業</option><option value="B-4">B-4｜一般商業／旅館等依核定類組</option></optgroup><optgroup label="C類｜工業、倉儲類"><option value="C-1">C-1｜工業倉儲類（一）</option><option value="C-2">C-2｜工業倉儲類（二）</option></optgroup><optgroup label="D類｜休閒文教類"><option value="D-1">D-1｜休閒／文教用途</option><option value="D-2">D-2｜休閒／文教用途</option><option value="D-3">D-3｜休閒／文教用途</option><option value="D-4">D-4｜休閒／文教用途</option><option value="D-5">D-5｜休閒／文教用途</option></optgroup><optgroup label="E類｜宗教殯葬類"><option value="E">E｜宗教／殯葬用途</option></optgroup><optgroup label="F類｜衛生福利更生類"><option value="F-1">F-1｜衛生／福利用途</option><option value="F-2">F-2｜衛生／福利用途</option><option value="F-3">F-3｜衛生／福利用途</option><option value="F-4">F-4｜衛生／福利用途</option></optgroup><optgroup label="G類｜辦公服務類"><option value="G-1">G-1｜辦公服務類（一）</option><option value="G-2">G-2｜一般事務所／辦公室</option><option value="G-3">G-3｜一般零售業／店舖</option></optgroup><optgroup label="H、I類"><option value="H-1">H-1｜住宿類（一）</option><option value="H-2">H-2｜集合住宅／住宅</option><option value="I">I｜危險物品類</option></optgroup><optgroup label="常用特殊空間"><option value="SPECIAL-DC">防災中心（高層建築物）</option><option value="SPECIAL-KITCHEN">B-3 餐飲業廚房</option></optgroup></select><p class="field-note">依建築師核定使用類組選取；特殊空間可選擇常用用途。</p></div>
+          <div><label for="finishFloor">所在樓層</label><select id="finishFloor"><option value="">請選擇所在樓層</option><option value="basement">地下層</option><option value="low">地上1～10層</option><option value="high">地上11層以上</option></select></div>
+          <div><label for="finishSpace">檢討部位</label><select id="finishSpace"><option value="居室">居室或該使用部分</option><option value="通達地面之走廊">通達地面之走廊</option><option value="樓梯間">通達地面之樓梯</option><option value="其他">其他空間（需確認）</option></select></div>
+          <div><label for="finishNoWindow">是否為無窗戶居室</label><select id="finishNoWindow"><option value="unknown">尚未確認</option><option value="yes">是</option><option value="no">否</option></select><p class="field-note">依《建築技術規則》第1條第35款認定，不等同單純沒有外窗。</p></div>
+        </div>
+        <div id="finishHighWrap" style="display:none;margin-top:18px"><label for="finishHighComp">地上11層以上防火區劃面積（選填）</label><select id="finishHighComp"><option value="unknown">尚未確認防火區劃面積</option><option value="200">每200㎡以內區劃</option><option value="500">每500㎡以內區劃</option></select><p class="field-note">第88條附表（十三）另依防火區劃面積判定；如採有效自動滅火設備放寬，須另外核對。</p></div>
+        <div id="finishOutput" class="compartment-output" aria-live="polite" style="margin-top:20px"><div class="empty">請選擇使用類組或用途，以及所在樓層。</div></div>
+        <div class="form-actions"><button class="btn-secondary" type="button" id="finishCopy" disabled>複製檢討結果</button><button class="btn-quiet" type="button" id="finishReset">清除重新檢討</button></div>
+        <div class="notice" style="margin-top:18px">初步結果以建築技術規則建築設計施工編第88條為基礎，另確認適用的特殊用途規定。若為無窗戶居室、11層以上、地下建築物或設有其他特殊設備，須依實際條件核對；本頁不代替正式裝修審查。</div>
+      </div>
+    </section>
+    <section id="view-sources" class="section">
+      <div class="page-header"><div><h2>法規來源與版本管理</h2><p>此網站只記錄已核對的法規入口；實際審查須確認適用版本與相關解釋函。</p></div></div>
+      <div class="workspace-card"><div class="source-list"><div class="source-row"><strong>建築技術規則－建築設計施工編</strong><p class="muted">無窗戶居室定義、內部裝修、防火區劃、排煙設備等。</p><a class="source-link" href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0070115" target="_blank" rel="noopener noreferrer">開啟全國法規資料庫 ↗</a></div><div class="source-row"><strong>各類場所消防安全設備設置標準</strong><p class="muted">消防安全設備設置及排煙等規範，與建築技術規則分開檢討。</p><a class="source-link" href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0120029" target="_blank" rel="noopener noreferrer">開啟全國法規資料庫 ↗</a></div><div class="source-row"><strong>內政部國土管理署法規專區</strong><p class="muted">核對主管機關法規與相關公告。</p><a class="source-link" href="https://www.nlma.gov.tw/ch/legislation/regsearch/6175" target="_blank" rel="noopener noreferrer">開啟國土管理署 ↗</a></div></div></div>
+      <div class="notice warning">法規檢討模組將依已驗證的條文及條件分階段加入；尚未建立完整規則的模組只整理檢討要件，不自動判定「符合」或「免設」。</div>
+    </section>
+  </main>
+
+  <footer><p>&copy; 2026 DC Engineering. All Rights Reserved. | 打造專屬您的智慧工程作業系統</p></footer>
+
+  <script>
+  'use strict';
+  const el=id=>document.getElementById(id);
+  const v=id=>el(id).value;
+  const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt=n=>Number(n).toLocaleString('zh-TW',{maximumFractionDigits:4,minimumFractionDigits:0});
+  let lastResult='';
+  let doorLastResult='';
+  function view(name){
+    document.querySelectorAll('.section').forEach(x=>x.classList.toggle('show',x.id==='view-'+name));
+    document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===name));
+    el('siteNav').classList.remove('is-open');el('menuBtn').setAttribute('aria-expanded','false');
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+  document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>view(btn.dataset.view)));
+  el('logoHome').addEventListener('click',e=>{e.preventDefault();view('home')});
+  el('menuBtn').addEventListener('click',()=>{const open=el('menuBtn').getAttribute('aria-expanded')!=='true';el('menuBtn').setAttribute('aria-expanded',String(open));el('siteNav').classList.toggle('is-open',open)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){el('siteNav').classList.remove('is-open');el('menuBtn').setAttribute('aria-expanded','false')}});
+
+  function resetWindow(){
+    el('roomArea').value='';el('openArea').value='';
+    el('windowOutput').classList.remove('show');
+    el('roomAreaHint').textContent='輸入此欄，右側自動計算所需 2% 開口面積。';
+    el('openAreaHint').textContent='輸入此欄，左側自動反算可對應的樓地板面積。';
+    lastResult='';doorLastResult='';
+    doorSequence=0;doorData=[];el('doorRows').replaceChildren();addDoor();
+  }
+  function updateWindow(source){
+    const input=el(source),other=el(source==='roomArea'?'openArea':'roomArea');
+    const raw=input.value.trim();
+    if(raw===''){
+      other.value='';el('windowOutput').classList.remove('show');lastResult='';recalcDoors();return;
+    }
+    const n=Number(raw);
+    if(!Number.isFinite(n)||n<0||(source==='roomArea'&&n===0)){
+      other.value='';el('windowOutput').classList.remove('show');lastResult='';recalcDoors();return;
+    }
+    const area=source==='roomArea'?n:n/0.02;
+    const opening=source==='roomArea'?n*0.02:n;
+    if(!Number.isFinite(area)||!Number.isFinite(opening)){
+      other.value='';el('windowOutput').classList.remove('show');lastResult='';recalcDoors();return;
+    }
+    const computed=source==='roomArea'?opening:area;
+    other.value=Number(computed.toPrecision(12)).toString();
+    const sourceIsArea=source==='roomArea';
+    el('roomAreaHint').textContent=sourceIsArea?'已輸入樓地板面積':'已自動反算，可修改此欄重新換算';
+    el('openAreaHint').textContent=sourceIsArea?'已自動計算，可修改此欄重新換算':'已輸入有效通風開口面積';
+    el('roomAreaMetric').textContent=fmt(area)+' ㎡';
+    el('neededMetric').textContent=fmt(opening)+' ㎡';
+    el('formulaText').textContent=sourceIsArea
+      ?'計算式：'+fmt(area)+' × 2% = '+fmt(opening)+' ㎡'
+      :'計算式：'+fmt(opening)+' ÷ 2% = '+fmt(area)+' ㎡';
+    const description=sourceIsArea
+      ?'依輸入的居室樓地板面積計算，2% 對應所需有效通風開口面積為 '+fmt(opening)+' ㎡。'
+      :'依輸入的有效通風開口面積反算，2% 對應的最大居室樓地板面積為 '+fmt(area)+' ㎡。';
+    el('windowMessage').className='notice';
+    el('windowMessage').textContent=description+' 此為面積換算，尚非完整法規符合性判定。';
+    el('windowOutput').classList.add('show');
+    lastResult='2% 有效通風開口面積換算\n居室樓地板面積：'+fmt(area)+' ㎡\n有效通風開口面積（2%）：'+fmt(opening)+' ㎡\n'+el('formulaText').textContent+'\n注意：僅為面積換算，須另核對實際有效開口及其他法規條件。';
+    recalcDoors();
+  }
+  el('roomArea').addEventListener('input',()=>updateWindow('roomArea'));
+  el('openArea').addEventListener('input',()=>updateWindow('openArea'));
+  el('resetWindow').addEventListener('click',resetWindow);
+  el('copyResult').addEventListener('click',async()=>{
+    if(!lastResult)return;
+    const copyText=[lastResult,doorLastResult].filter(Boolean).join('\n\n');
+    try{await navigator.clipboard.writeText(copyText);alert('已複製換算與門窗計算結果。')}
+    catch(e){const temp=document.createElement('textarea');temp.value=copyText;document.body.appendChild(temp);temp.select();document.execCommand('copy');temp.remove();alert('已嘗試複製換算結果。')}
+  });
+
+
+  // 門窗有效開口試算：每樘採 cm，總面積換算為 m²。
+  // auto = 系統建議高度；使用者編輯高度後改成 manual，可驗證是否達到 2%。
+  let doorSequence=0;
+  let doorData=[];
+  const ceilDecimeterCm=n=>Math.ceil((n-1e-9)*10)/10;  // 向上至 0.1cm，避免四捨五入後低於門檻。
+  const validNumber=x=>x!==''&&Number.isFinite(Number(x))&&Number(x)>0;
+  const valueOf=(x)=>validNumber(x)?Number(x):null;
+  function addDoor(){
+    doorSequence+=1;
+    const id=doorSequence;
+    const d={id,width:'',height:'',mode:'auto'};
+    doorData.push(d);
+    const tr=document.createElement('tr');tr.dataset.id=String(id);
+    tr.innerHTML='<td class="door-name">門窗 '+id+'</td>'+
+      '<td><input aria-label="門窗'+id+'有效開口淨寬" class="door-width" type="number" inputmode="decimal" min="0" step="any" placeholder="輸入寬度"><span class="door-unit">單位 cm</span></td>'+
+      '<td><input aria-label="門窗'+id+'有效開口淨高" class="door-height" type="number" inputmode="decimal" min="0" step="any" placeholder="自動計算"><span class="door-auto">輸入寬度後自動計算</span></td>'+
+      '<td class="door-area">—</td>'+
+      '<td><button type="button" class="remove-door" aria-label="移除門窗'+id+'">移除</button><span class="door-unit"><button type="button" class="auto-door" style="color:#047857;background:none;border:0;padding:3px 0;cursor:pointer">重新自動計算</button></span></td>';
+    const widthEl=tr.querySelector('.door-width');
+    const heightEl=tr.querySelector('.door-height');
+    widthEl.addEventListener('input',()=>{d.width=widthEl.value;recalcDoors()});
+    heightEl.addEventListener('input',()=>{d.height=heightEl.value;d.mode=d.height.trim()===''?'auto':'manual';recalcDoors()});
+    tr.querySelector('.remove-door').addEventListener('click',()=>{
+      if(doorData.length===1)return;
+      doorData=doorData.filter(x=>x.id!==id);tr.remove();recalcDoors();
+    });
+    tr.querySelector('.auto-door').addEventListener('click',()=>{d.mode='auto';d.height='';recalcDoors()});
+    el('doorRows').appendChild(tr);
+    recalcDoors();
+  }
+  function recalcDoors(){
+    const needed=valueOf(el('openArea').value);
+    const room=valueOf(el('roomArea').value);
+    const manualArea=doorData.reduce((sum,d)=>{
+      const w=valueOf(d.width),h=valueOf(d.height);
+      return sum+(d.mode==='manual'&&w&&h?w*h/10000:0);
+    },0);
+    const autos=doorData.filter(d=>d.mode==='auto'&&valueOf(d.width));
+    const autoWidth=autos.reduce((sum,d)=>sum+Number(d.width),0);
+    const remaining=Math.max(0,(needed??0)-manualArea);
+    const calcHeight=needed!==null&&autoWidth>0 ? ceilDecimeterCm(remaining*10000/autoWidth) : null;
+    // 若有多個待補開口且寬度已輸入，分配相同建議高度，並可隨時改為手動值。
+    autos.forEach(d=>{d.height=calcHeight!==null?String(calcHeight):''});
+    let total=0,complete=true,usedAuto=false;
+    const detail=[];
+    doorData.forEach(d=>{
+      const tr=el('doorRows').querySelector('tr[data-id="'+d.id+'"]');
+      if(!tr)return;
+      const wi=tr.querySelector('.door-width'),hi=tr.querySelector('.door-height');
+      const label=tr.querySelector('.door-auto');
+      if(hi.value!==d.height)hi.value=d.height;
+      hi.classList.toggle('auto-height',d.mode==='auto');
+      label.textContent=d.mode==='auto'?'系統建議高度（可修改）':'手動高度（按實際尺寸檢討）';
+      label.style.color=d.mode==='auto'?'#059669':'#64748b';
+      const w=valueOf(d.width),h=valueOf(d.height);
+      if(!w || h===null){complete=false;tr.querySelector('.door-area').textContent='—';detail.push('門窗 '+d.id+'：未完成');}
+      else{
+        const itemArea=w*h/10000;
+        total+=itemArea;
+        usedAuto=usedAuto || d.mode==='auto';
+        tr.querySelector('.door-area').textContent=fmt(itemArea)+' ㎡';
+        detail.push('門窗 '+d.id+'：'+fmt(w)+' × '+fmt(h)+' cm = '+fmt(itemArea)+' ㎡'+(d.mode==='auto'?'（建議高度）':''));
+      }
+      tr.querySelector('.remove-door').disabled=doorData.length===1;
+    });
+    const totalEl=el('doorTotalArea'),requiredEl=el('doorRequiredArea'),status=el('doorStatus'),note=el('doorRatio');
+    totalEl.textContent=(doorData.some(d=>validNumber(d.width))?fmt(total)+' ㎡':'—');
+    requiredEl.textContent=needed===null?'—':fmt(needed)+' ㎡';
+    const ratio=room?total/room*100:null;
+    if(needed===null){
+      status.innerHTML='<strong class="wait">尚待輸入</strong>';
+      note.textContent='請先在上方輸入居室樓地板面積或所需 2% 開口面積。';
+    }else if(!complete){
+      status.innerHTML='<strong class="wait">資料未完成</strong>';
+      note.textContent='請填寫所有門窗的有效開口淨寬；可讓高度自動推算或改為手動實際高度。';
+    }else{
+      const meets=total+1e-8>=needed;
+      status.innerHTML='<strong class="'+(meets?'ok':'bad')+'">'+(meets?'符合':'不符合')+'</strong><span class="muted">'+(usedAuto?'2% 面積試算（含自動建議高度）':'依輸入有效開口尺寸計算')+'</span>';
+      const delta=Math.abs(total-needed);
+      note.textContent='開口比例：'+(ratio!==null?ratio.toFixed(2)+'%':'—')+'；'+(meets?'較 2% 需求多 '+fmt(delta)+' ㎡。':'尚不足 '+fmt(delta)+' ㎡。')+(usedAuto?' 建議高度須與實際可通風淨開口核對。':'');
+    }
+    doorLastResult='門窗有效開口面積計算\n'+detail.join('\n')+'\n有效開口總面積：'+fmt(total)+' ㎡\n2% 所需開口：'+(needed===null?'未輸入':fmt(needed)+' ㎡')+'\n結果：'+status.textContent.trim()+'\n（僅檢討面積比例，不等同完整法規判定）';
+  }
+  el('addDoor').addEventListener('click',addDoor);
+  addDoor();
+
+  // 內部裝修耐燃等級：使用類組＋樓層下拉，自動帶出第88條的基本要求。
+  (() => {
+    const $=id=>document.getElementById(id);
+    const escapeHtml=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const law='https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0070115';
+    const cls={
+      'A-1':3,'A-2':3,'B-1':3,'B-2':3,'B-3':3,'B-4':3,
+      'C-1':2,'C-2':3,'D-1':3,'D-2':3,'D-3':3,'D-4':3,'D-5':3,
+      'E':3,'F-1':3,'F-2':3,'F-3':3,'F-4':3,'G-1':3,'G-2':3,'G-3':3,
+      'H-1':3,'H-2':null,'I':1,'SPECIAL-DC':1,'SPECIAL-KITCHEN':1
+    };
+    const floorNames={basement:'地下層',low:'地上1～10層',high:'地上11層以上'};
+    const grade=n=>n==null?'尚須核對':n===1?'耐燃一級':`耐燃${['','一','二','三'][n]}級以上`;
+    let copyText='';
+    function update(){
+      const use=$('finishUse').value,fl=$('finishFloor').value,space=$('finishSpace').value;
+      const noWindow=$('finishNoWindow').value,highComp=$('finishHighComp').value;
+      const highWrap=$('finishHighWrap'),out=$('finishOutput');
+      highWrap.style.display=fl==='high'?'block':'none';
+      $('finishCopy').disabled=true;copyText='';
+      if(!use||!fl){out.innerHTML='<div class="empty">請選擇使用類組或用途，以及所在樓層。</div>';return;}
+      const isCorridor=['通達地面之走廊','樓梯間'].includes(space);
+      const isRoom=space==='居室';
+      let room=cls[use],corridor=use==='I'||use==='SPECIAL-DC'||use==='SPECIAL-KITCHEN'?1:2;
+      const special=use.startsWith('SPECIAL-');
+      let titles=[],notes=[],pending=[];
+      if(use==='SPECIAL-DC'){
+        titles.push('高層建築物防災中心：耐燃一級');
+        notes.push('依第259條核對防災中心特殊規定；本項限高層建築物的防災中心。');
+      } else if(use==='SPECIAL-KITCHEN'){
+        titles.push('B-3組廚房：牆面及天花板耐燃一級');
+        notes.push('依第86條第1項第4款，廚房另有防火區劃及裝修要求。');
+      } else {
+        titles.push('依第88條附表使用類組之基本要求');
+      }
+      if(use==='H-2'){
+        notes.push('H-2住宅類於第88條一般使用類組列為「－」，並不表示任何特殊條件下都不受裝修限制。');
+      }
+      if(fl==='basement' && (/^A-/.test(use)||/^G-/.test(use)||['B-1','B-2','B-3'].includes(use))){
+        room=room===null?2:Math.min(room,2); corridor=Math.min(corridor,1);
+        titles.push('地下層特定使用類組：第88條附表（十）');
+      }
+      if(noWindow==='yes' && isRoom){
+        room=room===null?2:Math.min(room,2);corridor=Math.min(corridor,1);
+        titles.push('無窗戶居室：第88條附表（十一）');
+      } else if(noWindow==='unknown' && isRoom && use!=='SPECIAL-DC' && use!=='SPECIAL-KITCHEN'){
+        pending.push('尚未確認是否屬法定無窗戶居室；如屬無窗戶居室，需再套用第88條附表（十一）。');
+      }
+      if(fl==='high' && !special){
+        if(highComp==='200'){
+          room=room===null?2:Math.min(room,2);corridor=Math.min(corridor,1);
+          titles.push('11層以上：每200㎡以內防火區劃');
+        } else if(highComp==='500'){
+          room=1;corridor=1;
+          titles.push('11層以上：每500㎡以內防火區劃');
+        } else {
+          pending.push('11層以上另須確認每200㎡／500㎡內防火區劃等條件，才能確定第88條附表（十三）的耐燃等級。');
+        }
+      }
+      if(fl==='basement')pending.push('「地下層」不一定等於法規所稱「地下建築物」；若屬地下建築物，尚須另依第88條附表（十四）及第204條檢核。');
+      if(use==='H-2')pending.push('住宅若有使用燃燒設備的房間，需按第88條附表（十二）另行檢討。');
+      if(space==='其他')pending.push('請確認空間是否屬於居室、通達地面之走廊或樓梯，再判定適用欄位。');
+      notes.push('特殊用途或原核定性能設計如有更嚴格限制，仍以適用法規及核准圖說為準。');
+      notes.push('第88條另設裝修限制例外及設備條件，本頁未將免受限制的情形自動視為符合。');
+      const active=isCorridor?corridor:isRoom?room:null;
+      const title=active===null?'尚須確認適用耐燃等級':pending.some(x=>x.includes('11層以上另須確認'))?'基本要求：'+grade(active)+'（11F以上待核對）':'初步裝修要求：'+grade(active);
+      const useLabel=$('finishUse').selectedOptions[0].textContent;
+      const spaceLabel=$('finishSpace').selectedOptions[0].textContent;
+      const facts=[['居室／使用部分',grade(room)],['通達地面走廊及樓梯',grade(corridor)],['本次檢討部位',spaceLabel]];
+      const rows=facts.map(([k,v])=>'<div class="comp-fact"><small>'+escapeHtml(k)+'</small><strong>'+escapeHtml(v)+'</strong></div>').join('');
+      const help=notes.map(x=>'<div class="comp-detail">• '+escapeHtml(x)+'</div>').join('')+pending.map(x=>'<div class="comp-detail" style="color:#92400e">• 待確認：'+escapeHtml(x)+'</div>').join('');
+      out.innerHTML='<div class="comp-result check"><div class="comp-kicker">內部裝修初步檢討｜'+escapeHtml(floorNames[fl])+'</div><div class="comp-title">'+escapeHtml(title)+'</div><p>'+escapeHtml(titles.join('；'))+'</p></div><div class="comp-facts">'+rows+'</div>'+help+'<div class="comp-links"><a href="'+law+'" target="_blank" rel="noopener noreferrer">建築技術規則第88條及相關條文 ↗</a></div>';
+      copyText=['內部裝修耐燃等級初步檢討','用途：'+useLabel,'樓層：'+floorNames[fl],'部位：'+spaceLabel,'居室：'+grade(room),'通達地面走廊與樓梯：'+grade(corridor),'結果：'+title,...titles,...notes,...pending.map(x=>'待確認：'+x),'法規：建築技術規則建築設計施工編第88條及相關特殊用途規定'].join('\n');
+      $('finishCopy').disabled=false;
+    }
+    ['finishUse','finishFloor','finishSpace','finishNoWindow','finishHighComp'].forEach(id=>{
+      $(id).addEventListener('input',update);$(id).addEventListener('change',update);
+    });
+    $('finishReset').addEventListener('click',()=>{
+      $('finishUse').value='';$('finishFloor').value='';$('finishSpace').value='居室';$('finishNoWindow').value='unknown';$('finishHighComp').value='unknown';update();
+    });
+    $('finishCopy').addEventListener('click',async()=>{
+      if(!copyText)return;
+      try{await navigator.clipboard.writeText(copyText);$('finishCopy').textContent='已複製檢討結果';}
+      catch(e){const a=document.createElement('textarea');a.value=copyText;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();$('finishCopy').textContent='已嘗試複製';}
+    });
+    update();
+  })();
+
+// 排煙快速檢討：以無有效通風／無開口樓層為預設，依第28、190條作有限範圍初步判定。
+const simpleFloor=document.getElementById('simpleSmokeFloor');
+// 依第190條常見分層區間簡化選單；只修改排煙模組，不影響其他頁面的樓層欄位。
+[
+  {value:'basement',label:'地下層'},
+  {value:'above_1_10',label:'地上1～10層'},
+  {value:'above_11_plus',label:'地上11層以上'}
+].forEach(item=>{const o=document.createElement('option');o.value=item.value;o.textContent=item.label;simpleFloor.appendChild(o);});
+const SMOKE_ROOMS=new Set([
+  '一般事務所','辦公室','會議室','管委會辦公室','一般零售業／店舖','商場',
+  '餐廳用餐區','廚房','診療室','醫院病房','托嬰中心活動室','住宅客廳',
+  '住宅臥室','集合住宅','旅館客房','學校教室','體育館','運動中心活動空間'
+]);
+const SMOKE_NONROOMS=new Set([
+  '門廳','梯廳','走廊','樓梯間','昇降機昇降路','管道間','儲藏室',
+  '廁所','洗手間','浴室','機械室','電氣機房','停車空間'
+]);
+const SMOKE_190_4=new Set(['樓梯間','昇降機昇降路','管道間','儲藏室','廁所','洗手間']);
+const SMOKE_190_7=new Set(['集合住宅','學校教室','體育館']);
+// 典型甲類選項；實際第12條類組仍須依場所用途核定。
+const SMOKE_TYPICAL_A=new Set(['商場','餐廳用餐區','醫院病房','托嬰中心活動室','旅館客房']);
+const SMOKE_UNCERTAIN_A=new Set(['一般零售業／店舖','診療室','廚房','運動中心活動空間']);
+const simpleEl=id=>document.getElementById(id);
+function simpleKind(use){return SMOKE_ROOMS.has(use)?'room':SMOKE_NONROOMS.has(use)?'nonroom':null;}
+function simpleFloorData(floor){
+  if(floor==='basement')return {under:true,num:1,label:'地下層'};
+  if(floor==='above_1_10')return {under:false,num:10,label:'地上1～10層'};
+  if(floor==='above_11_plus')return {under:false,num:11,label:'地上11層以上'};
+  return null;
+}
+function simpleSmokeText(text){return String(text).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
+function simpleUpdateSmoke(){
+  const use=simpleEl('simpleSmokeUse').value,floor=simpleEl('simpleSmokeFloor').value;
+  const areaStr=simpleEl('simpleSmokeArea').value.trim();
+  const area=areaStr===''?NaN:Number(areaStr);
+  const finish=simpleEl('simpleSmokeFinish').value,fire=simpleEl('simpleSmokeCompartment').value;
+  const kind=simpleKind(use),level=simpleFloorData(floor),out=simpleEl('simpleSmokeOutput');
+  simpleEl('simpleSmokeKind').textContent=kind==='room'?'居室':kind==='nonroom'?'非居室':'請先選擇空間名稱';
+  simpleEl('simpleSmokeTypeHint').textContent=kind==='room'?'依空間名稱自動認定為居室；若實際為通行、儲藏等用途，應另選對應名稱。':kind==='nonroom'?'依空間名稱自動認定為非居室；實際兼供工作／集會使用者應另行確認。':'依選擇的空間自動帶入居室／非居室。';
+  if(!use||!floor||!Number.isFinite(area)||area<=0){
+    out.innerHTML='<div class="empty">請選擇空間名稱、樓層，並輸入大於 0 的樓地板面積。</div>';return;
+  }
+  // 第190條明列的類型可先判斷免設，不依賴另外兩項構造輸入。
+  let exempt=false,ref='',why='',alerts=[];
+  if(SMOKE_190_4.has(use)){
+    exempt=true;ref='第190條第4款';why='此類空間屬條文明列得免設排煙設備的部分。';
+  }else if(SMOKE_190_7.has(use)){
+    exempt=true;ref='第190條第7款';why='此用途屬條文明列得免設排煙設備的場所，須確認與實際核准用途一致。';
+  }else{
+    if(!finish||!fire){out.innerHTML='<div class="empty">請再選擇「是否耐燃一級」與「是否具完整1小時防火區劃」，系統即自動判定。</div>';return;}
+    const qualified=finish==='yes'&&fire==='yes'&&(area<=100||(!level.under&&level.num<=10&&kind==='nonroom'));
+    const undergroundA=level.under&&(SMOKE_TYPICAL_A.has(use)||SMOKE_UNCERTAIN_A.has(use));
+    if(level.under&&SMOKE_UNCERTAIN_A.has(use))alerts.push('地下層此用途是否屬第12條甲類，須依實際營業型態核對；未確認前不判定免設。');
+    if(qualified&&!undergroundA){
+      exempt=true;
+      if(!level.under&&level.num<=10&&kind==='room'){
+        ref='第190條第2款第1目';
+        why='地上10層以下居室、單一區劃面積100㎡以下、天花板及牆面耐燃一級，並具完整1小時防火區劃及防火門窗阻熱性。';
+      }else if(!level.under&&level.num<=10&&kind==='nonroom'){
+        ref='第190條第1款第1目';
+        why='地上10層以下非居室，符合耐燃一級及防火設備區劃要求；完整1小時區劃高於本目所需半小時區劃條件。';
+      }else{
+        ref='第190條第3款';
+        why='地上11層以上或非甲類地下層，單一區劃面積100㎡以下，天花板及牆面耐燃一級，並具完整1小時防火區劃及防火門窗阻熱性。';
+      }
+    }else{
+      ref='第28條／第190條';
+      why='依本次輸入，尚未符合網站已檢核的第190條免設途徑；在預設無有效通風開口的前提下，先以應設置排煙設備辦理。';
+    }
+    if(level.under&&SMOKE_TYPICAL_A.has(use))alerts.push('地下層甲類場所不得以第190條第3款免設；本工具已保守排除這項免設途徑。');
+    if(!level.under&&level.num<=10&&kind==='room'&&area<100&&finish==='yes'&&fire==='no'){
+      alerts.push('提醒：地上10層以下居室若天花板、牆面及其底材均耐燃一級，面積未達100㎡時，仍可能依第190條第2款第2目免設；本頁未查詢「底材」，因此暫依應設處理。');
+    }
+    if(!level.under&&level.num<=10&&kind==='nonroom'&&!exempt){
+      alerts.push('提醒：地上10層以下非居室亦可能符合第190條第1款的半小時區劃或100㎡以下防煙壁區劃途徑；本簡化頁未逐一查核。');
+    }
+  }
+  const roomLabel=kind==='room'?'居室':'非居室';
+  const floorLabel=level.label;
+  const title=exempt?'免設排煙設備':'需設置排煙設備';
+  const appearance=exempt?'simple-smoke-success':'simple-smoke-danger';
+  const reason=exempt?'已符合本次檢核的免設條件':'未能確認符合本次檢核的免設條件';
+  const extra=alerts.map(a=>'<div class="simple-smoke-alert">'+simpleSmokeText(a)+'</div>').join('');
+  out.innerHTML='<div class="simple-smoke-verdict '+appearance+'"><div class="simple-smoke-kicker">初步判定｜'+simpleSmokeText(reason)+'</div><div class="simple-smoke-title">'+title+'</div><p>'+simpleSmokeText(why)+'</p></div>'+
+    '<div class="simple-smoke-detail"><span><b>空間</b>'+simpleSmokeText(use)+'（'+roomLabel+'）</span><span><b>樓層</b>'+floorLabel+'</span><span><b>面積</b>'+simpleSmokeText(area)+'㎡</span><span><b>法規依據</b>'+simpleSmokeText(ref)+'</span></div>'+extra+
+    '<div class="form-actions"><button type="button" class="btn-secondary" id="simpleSmokeCopy">複製檢討結果</button></div>';
+  const summary=['排煙設備適用性簡化檢討','空間：'+use+'（'+roomLabel+'）','樓層：'+floorLabel,'面積：'+area+'㎡','天花板及室內牆面耐燃一級：'+(finish==='yes'?'是':finish==='no'?'否':'免設途徑無須檢核'),'完整1小時防火區劃（含門窗、樓板及門窗1小時阻熱性）：'+(fire==='yes'?'是':fire==='no'?'否':'免設途徑無須檢核'),'初步結果：'+title,'依據：'+ref,why,...alerts,'注意：本工具未查核第28條同用途總面積、無開口樓層總面積與第190條其他免設途徑；結果僅供初步檢討。'].join('\n');
+  simpleEl('simpleSmokeCopy').addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(summary);simpleEl('simpleSmokeCopy').textContent='已複製';}
+    catch(e){const t=document.createElement('textarea');t.value=summary;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();simpleEl('simpleSmokeCopy').textContent='已嘗試複製';}
+  });
+}
+for(const id of ['simpleSmokeUse','simpleSmokeFloor','simpleSmokeArea','simpleSmokeFinish','simpleSmokeCompartment']){
+  simpleEl(id).addEventListener('input',simpleUpdateSmoke);
+  simpleEl(id).addEventListener('change',simpleUpdateSmoke);
+}
+simpleEl('simpleSmokeReset').addEventListener('click',()=>{
+  for(const id of ['simpleSmokeUse','simpleSmokeFloor','simpleSmokeFinish','simpleSmokeCompartment'])simpleEl(id).value='';
+  simpleEl('simpleSmokeArea').value='';simpleUpdateSmoke();
+});
+simpleUpdateSmoke();
+
+
+  /* 防火區劃用途、樓層、面積與撒水自動連動（不改動其他模組） */
+  (() => {
+    const $=id=>document.getElementById(id);
+    const URL='https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0070115';
+    const link=n=>URL+'&search='+encodeURIComponent(n);
+    const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const special={
+      '防災中心': {rating:2,rule:['259'],title:'應設置2小時以上防火區劃',body:'高層建築物的防災中心，牆壁、防火門窗等防火設備需具2小時以上防火時效，並與該層防火構造樓地板形成區劃。室內牆面、天花板及底材為耐燃一級；另應確認基地所在建築物屬第227條高層建築物。',door:'2小時以上',extra:'防火門窗及防災中心外牆開口均須維持2小時以上防火性能。詳見第259條及相關函釋。'},
+      'B-3餐飲業廚房': {rating:1,rule:['86'],title:'應設置1小時以上防火區劃',body:'建築物使用類組 B-3 組之廚房，依第86條第1項第4款，以1小時以上防火時效的牆壁、防火門窗等與樓地板形成區劃；天花板及牆面應採耐燃一級。',door:'1小時以上',extra:'須先確認核准使用類組確為B-3；一般住宅廚房不應直接套用此條件。'},
+      '安全梯': {rating:1,rule:['79-2','97'],title:'應設置1小時以上防火區劃',body:'防火構造建築物內的安全梯樓梯間應依第79條之2形成垂直防火區劃，並依第97條確認安全梯出入口防火門相關性能。',door:'1小時以上',extra:'進入安全梯之出入口另須檢討半小時以上阻熱性、遮煙性能、淨寬及開啟方式；其他梯型應按實際構造檢討。'},
+      '昇降機道': {rating:1,rule:['79-2','242'],title:'應設置1小時以上垂直防火區劃',body:'昇降機道屬垂直貫穿樓板空間，依第79條之2規定原則上須設1小時以上防火區劃；昇降機道的防火設備並應具遮煙性能。',door:'1小時以上',extra:'前設昇降機間併同區劃等情形，應按第79條之2第2項及高層建築物第242條核對遮煙處理；另有法定例外，須確認。'},
+      '管道間': {rating:1,rule:['79-2'],title:'應設置1小時以上垂直防火區劃',body:'垂直貫穿樓板的管道間，原則上須以1小時以上防火時效之牆壁、防火設備與樓地板形成區劃。',door:'維修門1小時以上且具遮煙性能',extra:'應注意穿牆管線防火填塞、防火閘門等貫穿部位要求（第85條）。'},
+      '高層昇降機梯廳': {rating:1,rule:['242'],title:'應設置1小時以上獨立防火區劃',body:'高層建築物昇降機道併同昇降機間，應設1小時以上獨立防火區劃；昇降機間出入口的防火設備應具有遮煙性能。',door:'1小時以上；梯廳出口防火設備須具遮煙性',extra:'限符合第227條的高層建築物；一般低層建築物不可僅依此項判定。'},
+      '高層特安梯走廊': {rating:1,rule:['241'],title:'應設置1小時以上獨立防火區劃',body:'高層建築物連接特別安全梯間的走廊，應依第241條設置具1小時以上防火時效之獨立區劃。',door:'1小時以上',extra:'實際門窗、排煙室與特別安全梯的構造要求應分別核對。'},
+      '集合住宅分戶牆': {rating:1,rule:['86'],title:'應設置1小時以上分戶區劃',body:'連棟式或集合住宅分戶牆，依第86條第1項第1款應以具有1小時以上防火時效的牆壁及防火門窗與樓板或屋頂區劃。',door:'1小時以上（分戶牆上開口）',extra:'本項檢討的是分戶牆；住戶內部隔間並非一律適用。'}
+    };
+    let summary='';
+    function render(){
+      const use=$('compUse').value, floor=$('compFloor').value, str=$('compArea').value.trim();
+      const sprinkler=$('compSprinkler').value,area=str===''?NaN:Number(str);
+      const output=$('compartmentOutput'),finishWrap=$('compFinishWrap');
+      finishWrap.style.display=(floor==='high'&&!special[use])?'block':'none';
+      $('compCopy').disabled=true;summary='';
+      if(!use||!floor||!Number.isFinite(area)||area<=0||!sprinkler){
+        output.innerHTML='<div class="empty">請完成四項資料：用途、樓層、面積、撒水設備。</div>';return;
+      }
+      const fl=floor==='basement'?'地下層':floor==='low'?'地上1～10層':'地上11層以上';
+      const eff=area*(sprinkler==='yes'?.5:1),effFmt=eff.toLocaleString('zh-TW',{maximumFractionDigits:2});
+      const sp=sprinkler==='yes'?'有（全區有效涵蓋）':'無';
+      let title='',body='',door='—',time='—',rules=[],className='check',extra=[],metrics=[];
+      const spec=special[use];
+      if(spec){
+        title=spec.title;body=spec.body;door=spec.door;time=spec.rating+'小時以上';
+        rules=spec.rule;className='strong';extra.push(spec.extra);
+        if(use==='防災中心')extra.push('防災中心須設於避難層或其直上層、直下層，面積不得小於40㎡；如填寫面積不足40㎡，亦須修正。');
+        if(use==='防災中心'&&area<40)extra.push('目前輸入面積 '+area+'㎡，未達第259條防災中心40㎡最低要求。');
+        if((use==='高層昇降機梯廳'||use==='高層特安梯走廊')&&floor==='low')extra.push('所在樓層為1～10層時，仍須確認全棟是否屬第227條高層建築物。');
+        metrics=[['牆壁／區劃時效',time],['防火門窗',door],['面積',area+'㎡']];
+        extra.push('此類用途的特定防火區劃要求，不因設置撒水設備而直接免除。');
+      }else if(floor==='high'){
+        const finish=$('compFinish').value;
+        const allowed=finish==='substrate'?500:finish==='surface'?200:100;
+        const actualLimit=allowed*(sprinkler==='yes'?2:1);
+        const requiredCount=Math.ceil(eff/allowed);
+        door='1小時以上，且具1小時以上阻熱性';time='1小時以上';rules=['83'];
+        metrics=[['區劃面積上限',actualLimit.toLocaleString('zh-TW')+'㎡'],['計算面積（撒水折減後）',effFmt+'㎡'],['防火門窗', '1小時＋1小時阻熱']];
+        if(eff>allowed){
+          title='應依第83條劃分1小時防火區劃';
+          body='所填擬定區劃面積超出目前選擇的第83條上限。依此面積與裝修條件，至少需劃分 '+requiredCount+' 個符合面積限制的區劃；牆壁、防火門窗為1小時以上，且防火門窗應具1小時以上阻熱性。';
+          className='strong';
+        }else{
+          title='本空間未超過第83條選定面積上限';
+          body='所填空間面積符合目前採用的單一區劃面積上限，但仍須確認該層其他相連空間、完整樓層配置與是否另有用途／垂直防火區劃要求，不能直接認定本層免設。';
+          className='check';
+        }
+        extra.push('第83條可因裝修狀態選擇100㎡／200㎡／500㎡區劃上限；本頁未確認的裝修一律採100㎡上限。');
+        extra.push('撒水折減僅限有效自動滅火設備確實涵蓋的樓地板範圍。');
+        if(['停車空間','托嬰中心','電氣機房','消防機房','發電機房','電信機房'].includes(use))extra.push('此用途可能另有不同的用途分間牆、機房或第79條之1規定，應再個別確認。');
+      }else{
+        rules=['79'];
+        const limit=sprinkler==='yes'?3000:1500;
+        door='面積區劃適用時：1小時以上且具1小時阻熱性';time='面積區劃適用時：1小時以上';
+        metrics=[['一般區劃參考上限',limit.toLocaleString('zh-TW')+'㎡'],['計算面積（撒水折減後）',effFmt+'㎡'],['防火門窗','1小時＋1小時阻熱（條件式）']];
+        if(eff>1500){
+          title='超出一般面積區劃上限';
+          body='本空間如屬防火構造建築物第79條的應區劃範圍，依所填面積及撒水條件，已超出單一防火區劃上限，應劃分為符合上限的區劃；牆壁、防火門窗為1小時以上，防火設備具1小時以上阻熱性。';
+          className='strong';
+        }else{
+          title='單一空間未超過一般面積區劃上限';
+          body='目前輸入的面積未超過第79條參考區劃上限，但該條的啟動門檻涉及全棟總樓地板面積（1,500㎡以上），並非單一居室面積；仍須核對整棟與其他空間，不能認定無須設置防火區劃。';
+          className='check';
+        }
+        extra.push('第79條一般面積區劃以防火構造建築物「總樓地板面積」為前提；本表面積僅供單一空間初步換算。');
+        if(floor==='basement')extra.push('地下層不代表一定屬法定「地下建築物」；若為地下建築物，尚須核對第202、203條。');
+        if(use==='停車空間')extra.push('停車空間須併同第59條之1、第79條之1及第86條檢討，不可單憑本區面積判定是否需1小時防火門。');
+        if(['電氣機房','消防機房','發電機房','電信機房','托嬰中心'].includes(use))extra.push('本用途另可能有特定機房、福利設施或核定圖說要求，不能僅依第79條免區劃。');
+      }
+      let caution='<p style="margin-top:8px"><strong>施工與圖說提醒：</strong>穿越區劃的風管、電力及給排水管線，另應依第85、85-1條核對；防火門的遮煙、阻熱、開啟方向等不得僅由時效推定。</p>';
+      const refHtml=rules.map(n=>'<a href="'+URL+'" target="_blank" rel="noopener noreferrer">建築技術規則第'+esc(n)+'條 ↗</a>').join('');
+      const rows=metrics.map(([k,v])=>'<div class="comp-fact"><small>'+esc(k)+'</small><strong>'+esc(v)+'</strong></div>').join('');
+      const notes=extra.map(x=>'<div class="comp-detail">• '+esc(x)+'</div>').join('');
+      output.innerHTML='<div class="comp-result '+className+'"><div class="comp-kicker">初步檢討結果｜'+esc(use)+'・'+esc(fl)+'</div><div class="comp-title">'+esc(title)+'</div><p>'+esc(body)+'</p></div>'+
+        '<div class="comp-facts">'+rows+'</div>'+notes+caution+
+        '<div class="comp-links"><strong>法規：</strong>'+refHtml+'<a href="https://www.nlma.gov.tw/ch/titlelist/interpcomp/12975" target="_blank" rel="noopener noreferrer">防災中心外牆解釋函 ↗</a></div>';
+      summary=['防火區劃設置初步檢討','用途：'+use,'樓層：'+fl,'擬定區劃面積：'+area+'㎡','有效撒水設備：'+sp,'面積折減後：'+effFmt+'㎡','判定：'+title,'牆壁／區劃：'+time,'防火門窗：'+door,body,...extra,'依據：建築技術規則建築設計施工編第'+rules.join('、')+'條','注意：尚須核對全棟面積、樓層平面配置、實際使用類組、阻熱／遮煙性能與原核准圖說。'].join('\n');
+      $('compCopy').disabled=false;
+    }
+    ['compUse','compFloor','compArea','compSprinkler','compFinish'].forEach(id=>{
+      $(id).addEventListener('input',render);$(id).addEventListener('change',render);
+    });
+    $('compReset').addEventListener('click',()=>{
+      ['compUse','compFloor','compArea','compSprinkler'].forEach(id=>$(id).value='');
+      $('compFinish').value='base';render();
+    });
+    $('compCopy').addEventListener('click',async()=>{
+      if(!summary)return;
+      try{await navigator.clipboard.writeText(summary);$('compCopy').textContent='已複製檢討結果';}
+      catch(e){const t=document.createElement('textarea');t.value=summary;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();$('compCopy').textContent='已嘗試複製';}
+    });
+    render();
+  })();
+
+  </script>
+</body>
+</html>
