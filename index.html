@@ -214,8 +214,8 @@
       <div class="workspace-card">
         <p class="muted" style="margin-bottom:16px">請輸入<strong>其中一個面積</strong>；系統會自動計算另一欄。若改填另一欄，則會以新輸入數值反向換算。</p>
         <div class="grid-2">
-          <div><label for="roomArea">居室樓地板面積（㎡）</label><input id="roomArea" type="number" inputmode="decimal" step="any" min="0" placeholder="例如：120" autocomplete="off"><p class="field-note" id="roomAreaHint">輸入此欄，右側自動計算所需 2% 開口面積。</p></div>
-          <div><label for="openArea">有效通風開口面積（㎡）</label><input id="openArea" type="number" inputmode="decimal" step="any" min="0" placeholder="例如：2.4" autocomplete="off"><p class="field-note" id="openAreaHint">輸入此欄，左側自動反算可對應的樓地板面積。</p></div>
+          <div><label for="roomArea">居室樓地板面積（㎡）</label><input id="roomArea" type="text" inputmode="decimal" placeholder="例如：120 或 114*2" autocomplete="off"><p class="field-note" id="roomAreaHint">輸入此欄，右側自動計算所需 2% 開口面積。</p></div>
+          <div><label for="openArea">有效通風開口面積（㎡）</label><input id="openArea" type="text" inputmode="decimal" placeholder="例如：2.4 或 1.2*2" autocomplete="off"><p class="field-note" id="openAreaHint">輸入此欄，左側自動反算可對應的樓地板面積。</p></div>
         </div>
         <div class="form-actions"><button id="resetWindow" class="btn-quiet">清除重新計算</button></div>
         <div class="output" id="windowOutput" aria-live="polite">
@@ -232,10 +232,10 @@
 
       <div class="workspace-card" id="doorCalcCard">
         <div class="section-head">
-          <div><h3>門窗開口面積計算</h3><p>預設 1 樘，可依需求新增門窗。輸入淨寬後，自動反推達到 2% 所需的最低淨高；亦可改填實際高度進行比對。</p></div>
+          <div><h3>門窗開口面積計算</h3><p>預設 1 樘，可依需求新增門窗。輸入淨寬會自動反推所需淨高，輸入淨高也會自動反推所需淨寬；可再手動修改尺寸檢討實際是否達 2%。</p></div>
           <button type="button" class="btn-secondary" id="addDoor">＋ 新增門窗</button>
         </div>
-        <div class="notice">寬、高單位為 <strong>cm</strong>；每樘有效開口面積＝寬 × 高 ÷ 10,000（㎡）。多樘門窗會加總；多個自動高度會共同分配尚需的開口面積。</div>
+        <div class="notice">寬、高單位為 <strong>cm</strong>；每樘有效開口面積＝寬 × 高 ÷ 10,000（㎡）。多樘門窗會加總；多個自動推算欄位會共同分配尚需的開口面積。</div>
         <div class="opening-table-wrap">
           <table class="opening-table" aria-label="各樘門窗有效開口面積計算">
             <thead><tr><th>門窗</th><th>有效開口淨寬（cm）</th><th>有效開口淨高（cm）</th><th>開口面積（㎡）</th><th>操作</th></tr></thead>
@@ -472,14 +472,42 @@
     lastResult='';doorLastResult='';
     doorSequence=0;doorData=[];el('doorRows').replaceChildren();addDoor();
   }
+  // 2% 面積欄位支援直接計算四則運算；不使用 eval，並限制可輸入字元與運算範圍。
+  // 輸入算式時即時更新對應欄位，Enter／離開欄位時將計算結果寫回本欄。
+  function evaluateAreaExpression(raw){
+    let text=String(raw).trim().replace(/[×＊ｘXx]/g,'*').replace(/[÷／]/g,'/').replace(/[＋]/g,'+').replace(/[－−]/g,'-').replace(/[．]/g,'.').replace(/[（]/g,'(').replace(/[）]/g,')');
+    if(!text||text.length>120||!/^[0-9.\s+\-*/()]+$/.test(text))return null;
+    let i=0;
+    const skip=()=>{while(i<text.length&&/\s/.test(text[i]))i++;};
+    function factor(){
+      skip();
+      if(text[i]==='+'||text[i]==='-'){const op=text[i++],x=factor();return x===null?null:(op==='-'?-x:x);}
+      if(text[i]==='('){i++;const x=expr();skip();if(text[i]!==')')return null;i++;return x;}
+      const m=text.slice(i).match(/^(?:\d+(?:\.\d*)?|\.\d+)/);
+      if(!m)return null;
+      i+=m[0].length;
+      const n=Number(m[0]);return Number.isFinite(n)?n:null;
+    }
+    function term(){
+      let x=factor();if(x===null)return null;
+      while(true){skip();const op=text[i];if(op!=='*'&&op!=='/')break;i++;const y=factor();if(y===null||(op==='/'&&y===0))return null;x=op==='*'?x*y:x/y;if(!Number.isFinite(x))return null;}
+      return x;
+    }
+    function expr(){
+      let x=term();if(x===null)return null;
+      while(true){skip();const op=text[i];if(op!=='+'&&op!=='-')break;i++;const y=term();if(y===null)return null;x=op==='+'?x+y:x-y;if(!Number.isFinite(x))return null;}
+      return x;
+    }
+    const result=expr();skip();return result!==null&&i===text.length&&Number.isFinite(result)?result:null;
+  }
   function updateWindow(source){
     const input=el(source),other=el(source==='roomArea'?'openArea':'roomArea');
     const raw=input.value.trim();
     if(raw===''){
       other.value='';el('windowOutput').classList.remove('show');lastResult='';recalcDoors();return;
     }
-    const n=Number(raw);
-    if(!Number.isFinite(n)||n<0||(source==='roomArea'&&n===0)){
+    const n=evaluateAreaExpression(raw);
+    if(n===null||n<0||(source==='roomArea'&&n===0)){
       other.value='';el('windowOutput').classList.remove('show');lastResult='';recalcDoors();return;
     }
     const area=source==='roomArea'?n:n/0.02;
@@ -506,8 +534,20 @@
     lastResult='2% 有效通風開口面積換算\n居室樓地板面積：'+fmt(area)+' ㎡\n有效通風開口面積（2%）：'+fmt(opening)+' ㎡\n'+el('formulaText').textContent+'\n注意：僅為面積換算，須另核對實際有效開口及其他法規條件。';
     recalcDoors();
   }
-  el('roomArea').addEventListener('input',()=>updateWindow('roomArea'));
-  el('openArea').addEventListener('input',()=>updateWindow('openArea'));
+  // 自動將完成的算式寫回原本的輸入框；純數字亦可正常使用。
+  function commitAreaExpression(source){
+    const field=el(source),num=evaluateAreaExpression(field.value);
+    if(num===null||num<0||(source==='roomArea'&&num===0))return;
+    field.value=Number(num.toPrecision(12)).toString();
+    updateWindow(source);
+  }
+  ['roomArea','openArea'].forEach(source=>{
+    el(source).addEventListener('input',()=>updateWindow(source));
+    el(source).addEventListener('blur',()=>commitAreaExpression(source));
+    el(source).addEventListener('keydown',e=>{
+      if(e.key==='Enter'){e.preventDefault();commitAreaExpression(source);el(source).blur();}
+    });
+  });
   el('resetWindow').addEventListener('click',resetWindow);
   el('copyResult').addEventListener('click',async()=>{
     if(!lastResult)return;
@@ -518,12 +558,27 @@
 
 
   // 門窗有效開口試算：每樘採 cm，總面積換算為 m²。
-  // auto = 系統建議高度；使用者編輯高度後改成 manual，可驗證是否達到 2%。
+  // auto = 使用者先輸入寬，自動算高；autoWidth = 先輸入高，自動算寬；manual = 手動填寫兩者。
   let doorSequence=0;
   let doorData=[];
   const ceilDecimeterCm=n=>Math.ceil((n-1e-9)*10)/10;  // 向上至 0.1cm，避免四捨五入後低於門檻。
-  const validNumber=x=>x!==''&&Number.isFinite(Number(x))&&Number(x)>0;
-  const valueOf=(x)=>validNumber(x)?Number(x):null;
+  // 沿用上方面積欄位的安全算式解析器；門窗寬、高可輸入 40+90、25*2 等。
+  const valueOf=x=>{
+    if(String(x??'').trim()==='')return null;
+    const n=evaluateAreaExpression(x);
+    return n!==null&&n>0?n:null;
+  };
+  const validNumber=x=>valueOf(x)!==null;
+  // Enter 或離開欄位才將原算式轉成數值；輸入期間仍可完整編輯公式。
+  function commitDoorExpression(d,key,input){
+    const n=valueOf(input.value);
+    if(n!==null){
+      const normalized=Number(n.toPrecision(12)).toString();
+      d[key]=normalized;
+      input.value=normalized;
+    }
+    recalcDoors();
+  }
   function addDoor(){
     doorSequence+=1;
     const id=doorSequence;
@@ -531,54 +586,86 @@
     doorData.push(d);
     const tr=document.createElement('tr');tr.dataset.id=String(id);
     tr.innerHTML='<td class="door-name">門窗 '+id+'</td>'+
-      '<td><input aria-label="門窗'+id+'有效開口淨寬" class="door-width" type="number" inputmode="decimal" min="0" step="any" placeholder="輸入寬度"><span class="door-unit">單位 cm</span></td>'+
-      '<td><input aria-label="門窗'+id+'有效開口淨高" class="door-height" type="number" inputmode="decimal" min="0" step="any" placeholder="自動計算"><span class="door-auto">輸入寬度後自動計算</span></td>'+
+      '<td><input aria-label="門窗'+id+'有效開口淨寬" class="door-width" type="text" inputmode="text" placeholder="例如：40+90" autocomplete="off"><span class="door-unit door-width-note">單位 cm</span></td>'+
+      '<td><input aria-label="門窗'+id+'有效開口淨高" class="door-height" type="text" inputmode="text" placeholder="例如：50 或 25*2" autocomplete="off"><span class="door-auto">輸入寬度後自動計算</span></td>'+
       '<td class="door-area">—</td>'+
       '<td><button type="button" class="remove-door" aria-label="移除門窗'+id+'">移除</button><span class="door-unit"><button type="button" class="auto-door" style="color:#047857;background:none;border:0;padding:3px 0;cursor:pointer">重新自動計算</button></span></td>';
     const widthEl=tr.querySelector('.door-width');
     const heightEl=tr.querySelector('.door-height');
-    widthEl.addEventListener('input',()=>{d.width=widthEl.value;recalcDoors()});
-    heightEl.addEventListener('input',()=>{d.height=heightEl.value;d.mode=d.height.trim()===''?'auto':'manual';recalcDoors()});
+    widthEl.addEventListener('blur',()=>commitDoorExpression(d,'width',widthEl));
+    heightEl.addEventListener('blur',()=>commitDoorExpression(d,'height',heightEl));
+    widthEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitDoorExpression(d,'width',widthEl);widthEl.blur();}});
+    heightEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitDoorExpression(d,'height',heightEl);heightEl.blur();}});
+    widthEl.addEventListener('input',()=>{
+      d.width=widthEl.value;
+      if(d.mode==='autoWidth')d.mode='manual';  // 修改自動產生的寬度，視為輸入實際尺寸。
+      else if(d.mode==='auto'&&d.width.trim()===''&&validNumber(d.height))d.mode='autoWidth';
+      recalcDoors();
+    });
+    heightEl.addEventListener('input',()=>{
+      d.height=heightEl.value;
+      if(d.mode==='auto')d.mode=validNumber(d.width)?'manual':(d.height.trim()===''?'auto':'autoWidth');
+      else if(d.mode==='autoWidth'&&d.height.trim()==='')d.mode='auto';
+      recalcDoors();
+    });
     tr.querySelector('.remove-door').addEventListener('click',()=>{
       if(doorData.length===1)return;
       doorData=doorData.filter(x=>x.id!==id);tr.remove();recalcDoors();
     });
-    tr.querySelector('.auto-door').addEventListener('click',()=>{d.mode='auto';d.height='';recalcDoors()});
+    tr.querySelector('.auto-door').addEventListener('click',()=>{
+      if(!validNumber(d.width)&&validNumber(d.height)){d.mode='autoWidth';d.width='';}
+      else{d.mode='auto';d.height='';}
+      recalcDoors();
+    });
     el('doorRows').appendChild(tr);
     recalcDoors();
   }
   function recalcDoors(){
-    const needed=valueOf(el('openArea').value);
-    const room=valueOf(el('roomArea').value);
+    // 面積欄位可能正在輸入算式，取已算出的數值，不影響門窗總面積計算。
+    const nOpen=evaluateAreaExpression(el('openArea').value);
+    const nRoom=evaluateAreaExpression(el('roomArea').value);
+    const needed=nOpen!==null&&nOpen>0?nOpen:null;
+    const room=nRoom!==null&&nRoom>0?nRoom:null;
     const manualArea=doorData.reduce((sum,d)=>{
       const w=valueOf(d.width),h=valueOf(d.height);
       return sum+(d.mode==='manual'&&w&&h?w*h/10000:0);
     },0);
-    const autos=doorData.filter(d=>d.mode==='auto'&&valueOf(d.width));
-    const autoWidth=autos.reduce((sum,d)=>sum+Number(d.width),0);
+    const heightAutos=doorData.filter(d=>d.mode==='auto'&&valueOf(d.width));
+    const widthAutos=doorData.filter(d=>d.mode==='autoWidth'&&valueOf(d.height));
+    const sumWidths=heightAutos.reduce((sum,d)=>sum+(valueOf(d.width)??0),0);
+    const sumHeights=widthAutos.reduce((sum,d)=>sum+(valueOf(d.height)??0),0);
     const remaining=Math.max(0,(needed??0)-manualArea);
-    const calcHeight=needed!==null&&autoWidth>0 ? ceilDecimeterCm(remaining*10000/autoWidth) : null;
-    // 若有多個待補開口且寬度已輸入，分配相同建議高度，並可隨時改為手動值。
-    autos.forEach(d=>{d.height=calcHeight!==null?String(calcHeight):''});
+    // 單一方向時維持舊版的同高度分配；雙向混合時按待推算樘數分配剩餘面積。
+    const groups=heightAutos.length+widthAutos.length;
+    const heightShare=groups?remaining*(heightAutos.length/groups):0;
+    const widthShare=groups?remaining*(widthAutos.length/groups):0;
+    const calcHeight=needed!==null&&sumWidths>0?ceilDecimeterCm(heightShare*10000/sumWidths):null;
+    const calcWidth=needed!==null&&sumHeights>0?ceilDecimeterCm(widthShare*10000/sumHeights):null;
+    heightAutos.forEach(d=>{d.height=calcHeight!==null?String(calcHeight):''});
+    widthAutos.forEach(d=>{d.width=calcWidth!==null?String(calcWidth):''});
     let total=0,complete=true,usedAuto=false;
     const detail=[];
     doorData.forEach(d=>{
       const tr=el('doorRows').querySelector('tr[data-id="'+d.id+'"]');
       if(!tr)return;
       const wi=tr.querySelector('.door-width'),hi=tr.querySelector('.door-height');
-      const label=tr.querySelector('.door-auto');
+      const label=tr.querySelector('.door-auto'),widthNote=tr.querySelector('.door-width-note');
+      if(wi.value!==d.width)wi.value=d.width;
       if(hi.value!==d.height)hi.value=d.height;
+      wi.classList.toggle('auto-height',d.mode==='autoWidth');
       hi.classList.toggle('auto-height',d.mode==='auto');
-      label.textContent=d.mode==='auto'?'系統建議高度（可修改）':'手動高度（按實際尺寸檢討）';
-      label.style.color=d.mode==='auto'?'#059669':'#64748b';
+      widthNote.textContent=d.mode==='autoWidth'?'系統建議寬度（可修改）':'單位 cm';
+      widthNote.style.color=d.mode==='autoWidth'?'#059669':'#64748b';
+      label.textContent=d.mode==='auto'?'系統建議高度（可修改）':d.mode==='autoWidth'?'依輸入高度反推寬度':'手動高度（按實際尺寸檢討）';
+      label.style.color=d.mode==='manual'?'#64748b':'#059669';
       const w=valueOf(d.width),h=valueOf(d.height);
       if(!w || h===null){complete=false;tr.querySelector('.door-area').textContent='—';detail.push('門窗 '+d.id+'：未完成');}
       else{
         const itemArea=w*h/10000;
         total+=itemArea;
-        usedAuto=usedAuto || d.mode==='auto';
+        usedAuto=usedAuto || d.mode!=='manual';
         tr.querySelector('.door-area').textContent=fmt(itemArea)+' ㎡';
-        detail.push('門窗 '+d.id+'：'+fmt(w)+' × '+fmt(h)+' cm = '+fmt(itemArea)+' ㎡'+(d.mode==='auto'?'（建議高度）':''));
+        detail.push('門窗 '+d.id+'：'+fmt(w)+' × '+fmt(h)+' cm = '+fmt(itemArea)+' ㎡'+(d.mode==='auto'?'（建議高度）':d.mode==='autoWidth'?'（建議寬度）':''));
       }
       tr.querySelector('.remove-door').disabled=doorData.length===1;
     });
@@ -591,12 +678,12 @@
       note.textContent='請先在上方輸入居室樓地板面積或所需 2% 開口面積。';
     }else if(!complete){
       status.innerHTML='<strong class="wait">資料未完成</strong>';
-      note.textContent='請填寫所有門窗的有效開口淨寬；可讓高度自動推算或改為手動實際高度。';
+      note.textContent='請填寫所有門窗的有效開口淨寬或淨高；另一欄可自動推算，也可填寫實際尺寸。';
     }else{
       const meets=total+1e-8>=needed;
-      status.innerHTML='<strong class="'+(meets?'ok':'bad')+'">'+(meets?'符合':'不符合')+'</strong><span class="muted">'+(usedAuto?'2% 面積試算（含自動建議高度）':'依輸入有效開口尺寸計算')+'</span>';
+      status.innerHTML='<strong class="'+(meets?'ok':'bad')+'">'+(meets?'符合':'不符合')+'</strong><span class="muted">'+(usedAuto?'2% 面積試算（含自動建議尺寸）':'依輸入有效開口尺寸計算')+'</span>';
       const delta=Math.abs(total-needed);
-      note.textContent='開口比例：'+(ratio!==null?ratio.toFixed(2)+'%':'—')+'；'+(meets?'較 2% 需求多 '+fmt(delta)+' ㎡。':'尚不足 '+fmt(delta)+' ㎡。')+(usedAuto?' 建議高度須與實際可通風淨開口核對。':'');
+      note.textContent='開口比例：'+(ratio!==null?ratio.toFixed(2)+'%':'—')+'；'+(meets?'較 2% 需求多 '+fmt(delta)+' ㎡。':'尚不足 '+fmt(delta)+' ㎡。')+(usedAuto?' 建議尺寸須與實際可通風淨開口核對。':'');
     }
     doorLastResult='門窗有效開口面積計算\n'+detail.join('\n')+'\n有效開口總面積：'+fmt(total)+' ㎡\n2% 所需開口：'+(needed===null?'未輸入':fmt(needed)+' ㎡')+'\n結果：'+status.textContent.trim()+'\n（僅檢討面積比例，不等同完整法規判定）';
   }
